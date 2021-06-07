@@ -106,14 +106,9 @@ func main()	{
 			json.NewEncoder(rw).Encode(payload)
 			return
 		}
-		id, err := createUser(&user, client)
-		_id ,err := primitive.ObjectIDFromHex(id)
+		_, err = createUser(&user, client)
 		if err != nil {
-			rw.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		user.ID = _id
-		if err != nil {
+			fmt.Println(err)
 			rw.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -154,12 +149,7 @@ func main()	{
 		}
 		rw.Header().Set("Content-Type", "application/json")
 		rw.WriteHeader(http.StatusOK)
-		payload := struct{
-			status string
-		}{
-			status: "Success",
-		}
-		json.NewEncoder(rw).Encode(payload)
+		json.NewEncoder(rw).Encode(user)
 	}))
 	log.Println("HTTP server started on :4000")
 	err := http.ListenAndServe(":4000", nil)
